@@ -7,11 +7,14 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
-from settings_twitter import *
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+from os.path import abspath, basename, dirname, join
+from sys import path
+
+DJANGO_ROOT = dirname(dirname(abspath(__file__)))
+SITE_ROOT = dirname(DJANGO_ROOT)
+SITE_NAME = basename(DJANGO_ROOT)
+path.append(DJANGO_ROOT)
 
 
 # Quick-start development settings - unsuitable for production
@@ -60,7 +63,7 @@ WSGI_APPLICATION = 'cncdnua.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': join(SITE_ROOT, 'db.sqlite3'),
     }
 }
 
@@ -85,12 +88,13 @@ STATIC_URL = '/static/'
 
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
+    join(SITE_ROOT, 'templates'),
 )
 
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.twitter.TwitterOAuth',
+    'social.backends.github.GithubOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -106,3 +110,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'social.apps.django_app.context_processors.backends',
     'social.apps.django_app.context_processors.login_redirect',
 )
+
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
